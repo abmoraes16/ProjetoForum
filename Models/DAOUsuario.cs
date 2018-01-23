@@ -5,19 +5,16 @@ using System.Data.SqlClient;
 
 namespace ProjetoForum.Models
 {
-    public class DAOUsuario
+    public class DAOUsuario:Conexao
     {
-        SqlConnection conn = null;
-        SqlCommand cmd = null;
-        SqlDataReader reader = null;
-        string stringConexao = @"Data Source=.\SqlExpress;Initial Catalog=ProjetoForum;user id=sa;password=senai@123";
-
         public List<Usuario> Listar(){
-            List<Usuario> ListaUsuario = null;
+            List<Usuario> ListaUsuario = new List<Usuario>();
 
             try{
-                conn = new SqlConnection(stringConexao);
+                conn = new SqlConnection(Caminho());
                 conn.Open();
+
+                cmd = new SqlCommand();
 
                 cmd.CommandType = CommandType.Text;
                 cmd.CommandText = @"select * from usuario";
@@ -35,15 +32,15 @@ namespace ProjetoForum.Models
                     });
                 }
 
-            }catch(SqlException ex){
-                throw new Exception(ex.Message);
-            }
-            catch(Exception ex){
-                throw new Exception(ex.Message);
-            }
-            finally{
-                conn.Close();
-            }
+       }catch(SqlException ex){
+            throw new Exception("Erro ao tentar ler a tabela usuário ->"+ex.Message);
+        }
+        catch(Exception ex){
+            throw new Exception("Erro inesperado ->"+ex.Message);
+        }
+        finally{
+            conn.Close();
+        }
 
             return ListaUsuario;
     }
@@ -52,8 +49,10 @@ namespace ProjetoForum.Models
         bool resultado = false;
 
         try{
-            conn = new SqlConnection(stringConexao);
+            conn = new SqlConnection(Caminho());
             conn.Open();
+
+            cmd = new SqlCommand();
 
             cmd.CommandType = CommandType.Text;
             cmd.CommandText = @"insert into usuario(nome,login,senha) values(@Nome,@Login,@Senha)";
@@ -68,15 +67,17 @@ namespace ProjetoForum.Models
             if(linhas>0){
                 resultado=true;
             }
+
+            cmd.Parameters.Clear();
         }
+
         catch(SqlException ex){
-            throw new Exception(ex.Message);
+            throw new Exception("Erro ao tentar cadastrar ->"+ex.Message);
         }
         catch(Exception ex){
-            throw new Exception(ex.Message);
+            throw new Exception("Erro inesperado ->"+ex.Message);
         }
         finally{
-            cmd.Parameters.Clear();
             conn.Close();
         }
 
@@ -87,7 +88,9 @@ namespace ProjetoForum.Models
         bool resultado = false;
 
         try{
-            conn = new SqlConnection(stringConexao);
+            conn = new SqlConnection(Caminho());
+            cmd = new SqlCommand();
+
             conn.Open();
 
             cmd.CommandType = CommandType.Text;
@@ -105,14 +108,13 @@ namespace ProjetoForum.Models
                 resultado = true;
             }
 
-        }catch(SqlException ex){
-            throw new Exception(ex.Message);
+       }catch(SqlException ex){
+            throw new Exception("Erro ao tentar atualizar ->"+ex.Message);
         }
         catch(Exception ex){
-            throw new Exception(ex.Message);
+            throw new Exception("Erro inesperado ->"+ex.Message);
         }
         finally{
-            cmd.Parameters.Clear();
             conn.Close();
         }
 
@@ -123,8 +125,10 @@ namespace ProjetoForum.Models
         bool resultado = false;
 
         try{
-            conn = new SqlConnection(stringConexao);
+            conn = new SqlConnection(Caminho());
             conn.Open();
+
+            cmd = new SqlCommand();
 
             cmd.CommandType = CommandType.Text;
             cmd.CommandText = @"delete from usuario where id=@Id";
@@ -139,13 +143,12 @@ namespace ProjetoForum.Models
             }
 
         }catch(SqlException ex){
-            throw new Exception(ex.Message);
+            throw new Exception("Erro ao tentar excluir ->"+ex.Message);
         }
         catch(Exception ex){
-            throw new Exception(ex.Message);
+            throw new Exception("Erro inesperado ->"+ex.Message);
         }
         finally{
-            cmd.Parameters.Clear();
             conn.Close();
         }
 
