@@ -7,17 +7,17 @@ using ProjetoForum.Models;
 namespace ProjetoForum.Controllers
 {
     [Route ("api/[controller]")]
-    public class UsuarioController:Controller
+    public class TopicoController:Controller
     {
-        DAOUsuario dao = new DAOUsuario();
+        DAOTopico dao = new DAOTopico();
 
         [HttpGet (Name="Listar")]
-        public IEnumerable<Usuario> Get(){
+        public IEnumerable<Topico> Get(){
             return dao.Listar();
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Usuario usuario){
+        public IActionResult Post([FromBody] Topico Topico){
             JsonResult resultado = null;
 
             try{
@@ -29,7 +29,7 @@ namespace ProjetoForum.Controllers
                     resultado = new JsonResult(""); 
                     resultado.ContentType = "application/json";
 
-                    if(!dao.Cadastro(usuario))
+                    if(!dao.Cadastro(Topico))
                     {
                         resultado.StatusCode = 404;
                         resultado.Value = "Ocorreu um erro";
@@ -48,7 +48,7 @@ namespace ProjetoForum.Controllers
             return (Json(resultado));
         }
 
-        [HttpGet("{Id}",Name="ExibeUsuario")]
+        [HttpGet("{Id}",Name="ExibeTopico")]
         public IActionResult Get(int Id){
             var rs = new JsonResult(dao.Listar().Where(x=>x.Id==Id).FirstOrDefault()); //retorna primeiro dado que encontrar da lista que tiver o id informado
             rs.ContentType = "application/json";
@@ -66,7 +66,7 @@ namespace ProjetoForum.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody]Usuario usuario){
+        public IActionResult Put([FromBody]Topico Topico){
            JsonResult resultado = null;
 
             try{
@@ -78,7 +78,7 @@ namespace ProjetoForum.Controllers
                     resultado = new JsonResult(""); 
                     resultado.ContentType = "application/json";
 
-                    if(!dao.Atualizar(usuario))
+                    if(!dao.Atualizar(Topico))
                     {
                         resultado.StatusCode = 404;
                         resultado.Value = "Ocorreu um erro";
